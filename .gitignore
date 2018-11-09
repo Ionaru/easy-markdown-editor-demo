@@ -1,0 +1,14 @@
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Guild artifacts
+dist/
+
+# System files
+*.db
+
+# Node/Npm files
+node_modules/
+npm-debug.log*
