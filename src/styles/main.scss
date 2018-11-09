@@ -1,5 +1,22 @@
 html {
     body {
-        background-color: lightgray;
+        .button-github {
+            background-color: #24292e;
+            border-color: #24292e;
+        }
+
+        .button-npm {
+            background-color: #cb3837;
+            border-color: #cb3837;
+        }
+
+        .title-grid {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+
+            :last-child {
+                text-align: right;
+            }
+        }
     }
 }

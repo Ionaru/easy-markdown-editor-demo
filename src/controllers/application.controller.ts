@@ -13,8 +13,8 @@ import { logger } from 'winston-pnp-logger';
 import { RequestLogger } from '../loggers/request.logger';
 import { ErrorRouter } from '../routes/error.router';
 import { GlobalRouter } from '../routes/global.router';
+import { HomeRouter } from '../routes/home.router';
 import { NotFoundRouter } from '../routes/not-found.router';
-import { TestRouter } from '../routes/test.router';
 import { config } from './configuration.controller';
 import { DatabaseConnection, db } from './database.controller';
 import { WebServer } from './server.controller';
@@ -76,7 +76,7 @@ export class Application {
         // Configure Session Parser
         this.sessionParser = es({
             cookie: {
-                httpOnly: false,
+                httpOnly: true,
                 maxAge: 6 * 60 * 60 * 1000, // 6 hours
                 secure: config.getProperty('secure_only_cookies', true) as boolean,
             },
@@ -121,7 +121,7 @@ export class Application {
         expressApplication.use('*', (new GlobalRouter()).router);
 
         // Application routers.
-        expressApplication.use('/', (new TestRouter()).router);
+        expressApplication.use('/', (new HomeRouter()).router);
 
         // Error routers.
         expressApplication.use('*', (new NotFoundRouter()).router);
@@ -162,10 +162,6 @@ export class Application {
         }
 
         async function closeDBConnection() {
-            if (db && db.orm) {
-                await db.orm.close();
-                logger.info('ORM connection closed');
-            }
             if (db && db.pool) {
                 db.pool.end(() => {
                     logger.info('DB pool closed');

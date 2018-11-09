@@ -1,7 +1,7 @@
 {
-    "name": "express-typeorm-template",
+    "name": "easymde-demo",
     "version": "1.0.0",
-    "description": "A template for an express application, using Typescript and TypeORM.",
+    "description": "A demo website for Easy Markdown Editor",
     "scripts": {
         "build": "tsc --project tsconfig.json",
         "start": "cross-env NODE_ENV=production node ./dist/index.js",
@@ -13,6 +13,7 @@
     "author": "Jeroen Akkerman",
     "license": "MIT",
     "dependencies": {
+        "axios": "^0.18.0",
         "body-parser": "^1.18.3",
         "chalk": "^2.4.1",
         "compression": "^1.7.3",
@@ -31,7 +32,6 @@
         "on-finished": "^2.3.0",
         "reflect-metadata": "^0.1.12",
         "source-map-support": "^0.5.9",
-        "typeorm": "^0.2.8",
         "typescript": "^3.1.6",
         "winston-pnp-logger": "^1.0.5"
     },

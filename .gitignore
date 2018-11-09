@@ -12,3 +12,7 @@ dist/
 # Node/Npm files
 node_modules/
 npm-debug.log*
+
+# Application files
+configuration/*
+src/assets/stylesheets/

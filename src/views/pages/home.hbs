@@ -1,0 +1,78 @@
+{{#if version}}
+    <link rel="stylesheet" href="https://unpkg.com/easymde@{{version}}/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde@{{version}}/dist/easymde.min.js"></script>
+{{else}}
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+{{/if}}
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="title-grid">
+            <h1 class="display-4">Easy MarkDown Editor</h1>
+            <h1 class="display-4">v{{version}}</h1>
+        </div>
+
+        <p class="lead">A simple, beautiful, and embeddable JavaScript Markdown editor. Delightful editing for beginners and experts alike.
+            Features built-in autosaving and spell checking.</p>
+        <p>A fork of <a href="https://github.com/sparksuite/simplemde-markdown-editor" target="_blank">SimpleMDE</a></p>
+        <hr class="my-4">
+        <p class="lead">
+            <a href="https://github.com/Ionaru/easy-markdown-editor" target="_blank">
+                <button class="btn btn-lg btn-dark button-github">
+                    <i class="fab fa-github"></i> GitHub
+                </button>
+            </a>
+            <a href="https://www.npmjs.com/package/easymde" target="_blank">
+                <button class="btn btn-lg btn-danger button-npm">
+                    <i class="fas fa-box"></i> NPM
+                </button>
+            </a>
+        </p>
+    </div>
+</div>
+
+<div class="container">
+    <textarea title="thing" id="mde-demo"></textarea>
+    <script>
+        new EasyMDE({
+            autoDownloadFontAwesome: false,
+            element: document.getElementById('mde-demo'),
+            initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.\n'
+        });
+    </script>
+
+    <hr>
+
+    <h2>Autosaving</h2>
+    <p>The editor can automatically save its contents, so changes are not lost when you reload the page.</p>
+
+    <textarea title="thing" id="mde-autosave-demo"></textarea>
+    <script>
+        new EasyMDE({
+            autoDownloadFontAwesome: false,
+            autosave: {
+                enabled: true,
+                delay: 1000,
+                uniqueId: 'mde-autosave-demo'
+            },
+            element: document.getElementById('mde-autosave-demo'),
+            initialValue: '## Autosave \n This editor automatically saves its contents!\n'
+        });
+    </script>
+
+    <hr>
+
+    <h2>Toolbar customization</h2>
+    <p>The editor's toolbar can be editor to show more icons and even add custom icons!</p>
+
+    <textarea title="thing" id="mde-toolbar-demo"></textarea>
+    <script>
+        new EasyMDE({
+            autoDownloadFontAwesome: false,
+            showIcons: ['strikethrough', 'code', 'table', 'redo', 'heading', 'undo', 'heading-bigger', 'heading-smaller', 'heading-1', 'heading-2', 'heading-3', 'clean-block', 'horizontal-rule'],
+            element: document.getElementById('mde-toolbar-demo'),
+            initialValue: '\'## Toolbar \\n Here you can see all the buttons available for the toolbar.\\n\''
+        });
+    </script>
+</div>
