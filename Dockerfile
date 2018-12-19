@@ -1,22 +1,18 @@
 FROM node:10-alpine
 RUN mkdir /app/
+WORKDIR /app/
 
 ## INSTALL SERVER
 
-# Shortcut to create the server directory and data directory
-RUN mkdir /app/server/
-RUN mkdir /app/server/logs
-RUN mkdir /app/server/config
-WORKDIR /app/server
-
 # Copy needed build files
-COPY ./server/package.json .
-COPY ./server/package-lock.json .
-COPY ./server/tsconfig.json .
-COPY ./server/config .
+COPY ./package.json .
+COPY ./package-lock.json .
+COPY ./tsconfig.json .
+COPY ./gulpfile.ts .
+COPY ./configuration configuration
 
 # Copy source files
-COPY ./server/src .
+COPY ./src src
 
 # Install server dependencies
 RUN npm install
@@ -25,8 +21,9 @@ RUN npm install
 RUN npm run build
 
 # Add volumes
-VOLUME /app/server/logs
-VOLUME /app/server/config
+RUN mkdir /app/logs
+VOLUME /app/logs
+VOLUME /app/configuration
 
 
 ## RUN
