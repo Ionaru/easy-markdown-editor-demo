@@ -34,14 +34,13 @@ export class RequestLogger {
                     const router = chalk.white(route && route.length ? route!.join(' > ') : 'ServeStatic');
 
                     const ip = RequestLogger.getIp(request);
-                    const identifier = `${ip} (${chalk.white(request.sessionID!)})`;
 
                     const text = `${request.method} ${request.originalUrl}`;
 
                     const requestDuration = Date.now() - requestStartTime;
                     const arrow = RequestLogger.arrow;
 
-                    const logContent = `${identifier}: ${text} ${arrow} ${router} ${arrow} ${status}, ${requestDuration}ms`;
+                    const logContent = `${ip}: ${text} ${arrow} ${router} ${arrow} ${status}, ${requestDuration}ms`;
 
                     if (endResponse.statusCode >= 500) {
                         logger.error(logContent);

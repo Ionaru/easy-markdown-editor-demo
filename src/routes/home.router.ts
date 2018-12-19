@@ -37,7 +37,7 @@ export class HomeRouter extends BaseRouter {
                 HomeRouter.cachedLatestVersion = version;
                 setTimeout(() => {
                     HomeRouter.cachedLatestVersion = undefined;
-                }, 10800000);
+                }, 10800000);  // 3 hours.
             }
         }
 

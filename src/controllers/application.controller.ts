@@ -1,8 +1,6 @@
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import * as express from 'express';
-import * as MySQLStore from 'express-mysql-session';
-import * as es from 'express-session';
 import * as hbs from 'hbs';
 import * as hbsutils from 'hbs-utils';
 import * as helmet from 'helmet';
@@ -15,8 +13,6 @@ import { ErrorRouter } from '../routes/error.router';
 import { GlobalRouter } from '../routes/global.router';
 import { HomeRouter } from '../routes/home.router';
 import { NotFoundRouter } from '../routes/not-found.router';
-import { config } from './configuration.controller';
-import { DatabaseConnection, db } from './database.controller';
 import { WebServer } from './server.controller';
 
 export class Application {
@@ -25,9 +21,6 @@ export class Application {
         logger.info('Shutting down');
         process.exit(exitCode);
     }
-
-    public sessionStore?: es.Store;
-    public sessionParser?: express.RequestHandler;
 
     private webServer?: WebServer;
 
@@ -39,8 +32,6 @@ export class Application {
     private stylesFolder = `${this.sourceFolder}/styles`;
 
     public async start() {
-        await new DatabaseConnection().connect();
-
         logger.info('Beginning Express startup');
 
         const expressApplication = express();
@@ -60,37 +51,6 @@ export class Application {
         expressApplication.use(compression());
 
         logger.info('Express configuration set');
-
-        // Setup MySQL Session Storage
-        this.sessionStore = new MySQLStore({
-            schema: {
-                columnNames: {
-                    data: 'data',
-                    expires: 'expires',
-                    session_id: 'session_id',
-                },
-                tableName: 'session',
-            },
-        }, db.pool) as any;
-
-        // Configure Session Parser
-        this.sessionParser = es({
-            cookie: {
-                httpOnly: true,
-                maxAge: 6 * 60 * 60 * 1000, // 6 hours
-                secure: config.getProperty('secure_only_cookies', true) as boolean,
-            },
-            name: config.getProperty('session_key') as string,
-            resave: true,
-            rolling: true,
-            saveUninitialized: true,
-            secret: config.getProperty('session_secret') as string,
-            store: process.env.NODE_ENV === 'production' ? this.sessionStore : undefined,
-        });
-
-        expressApplication.use(this.sessionParser);
-
-        logger.info('Express session store loaded');
 
         expressApplication.use(sassMiddleware({
             debug: false,
@@ -153,23 +113,12 @@ export class Application {
         logger.warn(quitMessage);
 
         if (this.webServer) {
-            this.webServer.server.close(async () => {
+            this.webServer.server.close(() => {
                 logger.info('HTTP server closed');
-                closeDBConnection().then();
+                Application.exit(exitCode);
             });
         } else {
-            closeDBConnection().then();
-        }
-
-        async function closeDBConnection() {
-            if (db && db.pool) {
-                db.pool.end(() => {
-                    logger.info('DB pool closed');
-                    Application.exit(exitCode);
-                });
-            } else {
-                Application.exit(exitCode);
-            }
+            Application.exit(exitCode);
         }
     }
 }

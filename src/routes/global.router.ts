@@ -7,13 +7,7 @@ export class GlobalRouter extends BaseRouter {
     /**
      * All requests to the server go through this router (except when fetching static files).
      */
-    private static globalRoute(request: Request, _response: Response, next?: NextFunction): void {
-
-        // Define the session user if it didn't exists already
-        if (request.session && !request.session.user) {
-            request.session.user = {};
-        }
-
+    private static globalRoute(_request: Request, _response: Response, next?: NextFunction): void {
         // Continue to the other routes
         if (next) {
             next();

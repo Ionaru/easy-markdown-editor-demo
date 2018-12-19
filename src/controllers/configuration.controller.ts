@@ -16,6 +16,10 @@ export class Configurator {
     private readonly config: IConfig = {};
 
     constructor() {
+        if (config) {
+            throw new Error(`${this.constructor.name} can only be created once!`);
+        }
+
         config = this;
     }
 

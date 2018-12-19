@@ -18,29 +18,33 @@
         <p>A fork of <a href="https://github.com/sparksuite/simplemde-markdown-editor" target="_blank">SimpleMDE</a></p>
         <hr class="my-4">
         <p class="lead">
-            <a href="https://github.com/Ionaru/easy-markdown-editor" target="_blank">
-                <button class="btn btn-lg btn-dark button-github">
-                    <i class="fab fa-github"></i> GitHub
-                </button>
+            <a class="btn btn-lg btn-dark button-github" href="https://github.com/Ionaru/easy-markdown-editor" target="_blank">
+                <i class="fab fa-github"></i> GitHub
             </a>
-            <a href="https://www.npmjs.com/package/easymde" target="_blank">
-                <button class="btn btn-lg btn-danger button-npm">
-                    <i class="fas fa-box"></i> NPM
-                </button>
+            <a class="btn btn-lg btn-danger button-npm" href="https://www.npmjs.com/package/easymde" target="_blank">
+                <i class="fas fa-box"></i> NPM
             </a>
         </p>
     </div>
 </div>
 
 <div class="container">
+    <h2>The default editor</h2>
     <textarea title="thing" id="mde-demo"></textarea>
     <script>
         new EasyMDE({
             autoDownloadFontAwesome: false,
             element: document.getElementById('mde-demo'),
-            initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.\n'
+            initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
         });
     </script>
+    <pre><code class="js">
+    new EasyMDE({
+        autoDownloadFontAwesome: false,
+        element: document.getElementById('mde-demo'),
+        initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
+    });
+    </code></pre>
 
     <hr>
 
@@ -57,9 +61,21 @@
                 uniqueId: 'mde-autosave-demo'
             },
             element: document.getElementById('mde-autosave-demo'),
-            initialValue: '## Autosave \n This editor automatically saves its contents!\n'
+            initialValue: '## Autosave \n This editor automatically saves its contents every second!'
         });
     </script>
+    <pre><code class="js">
+    new EasyMDE({
+        autoDownloadFontAwesome: false,
+        autosave: {
+            enabled: true,
+            delay: 1000,
+            uniqueId: 'mde-autosave-demo'
+        },
+        element: document.getElementById('mde-autosave-demo'),
+        initialValue: '## Autosave \n This editor automatically saves its contents every second!'
+    });
+    </code></pre>
 
     <hr>
 
@@ -72,7 +88,15 @@
             autoDownloadFontAwesome: false,
             showIcons: ['strikethrough', 'code', 'table', 'redo', 'heading', 'undo', 'heading-bigger', 'heading-smaller', 'heading-1', 'heading-2', 'heading-3', 'clean-block', 'horizontal-rule'],
             element: document.getElementById('mde-toolbar-demo'),
-            initialValue: '\'## Toolbar \\n Here you can see all the buttons available for the toolbar.\\n\''
+            initialValue: '## Toolbar \n Here you can see all the buttons available for the toolbar.'
         });
     </script>
+    <pre><code class="js">
+    new EasyMDE({
+        autoDownloadFontAwesome: false,
+        showIcons: ['strikethrough', 'code', 'table', 'redo', 'heading', 'undo', 'heading-bigger', 'heading-smaller', 'heading-1', 'heading-2', 'heading-3', 'clean-block', 'horizontal-rule'],
+        element: document.getElementById('mde-toolbar-demo'),
+        initialValue: '## Toolbar \n Here you can see all the buttons available for the toolbar.'
+    });
+    </code></pre>
 </div>

@@ -16,7 +16,6 @@ import { Configurator } from './controllers/configuration.controller';
 
     const config = new Configurator();
     config.addConfigFile('config');
-    config.addConfigFile('database');
 
     const application = new Application();
 
