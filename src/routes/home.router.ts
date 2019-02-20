@@ -46,6 +46,10 @@ export class HomeRouter extends BaseRouter {
             const npmInfo = await HomeRouter.getNPMInfo();
             HomeRouter.cachedAvailableVersions = Object.keys(npmInfo.versions);
 
+            if (version === 'next' && npmInfo['dist-tags'] && npmInfo['dist-tags'].next) {
+                version = npmInfo['dist-tags'].next;
+            }
+
             if (!HomeRouter.cachedAvailableVersions.includes(version)) {
                 response.status(404);
             }
@@ -59,6 +63,7 @@ export class HomeRouter extends BaseRouter {
         super();
         this.createGetRoute('/', HomeRouter.homepage);
         this.createGetRoute('/latest', HomeRouter.homepage);
+        this.createGetRoute('/:id(next)', HomeRouter.homepage);
 
         this.createGetRoute('/:id([0-9]+\.[0-9]+\.[0-9]+)', HomeRouter.homepage);
         this.createGetRoute('/v:id([0-9]+\.[0-9]+\.[0-9]+)', HomeRouter.homepage);
