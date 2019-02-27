@@ -56,7 +56,8 @@ export class HomeRouter extends BaseRouter {
         }
 
         const useFA4 = request.query.fa4;
-        return response.render('pages/home.hbs', {useFA4, version});
+        const onReleaseVersion = version === HomeRouter.cachedLatestVersion;
+        return response.render('pages/home.hbs', {useFA4, version, onReleaseVersion});
     }
 
     constructor() {

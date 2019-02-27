@@ -1,10 +1,29 @@
-{{#if version}}
-    <link rel="stylesheet" href="https://unpkg.com/easymde@{{version}}/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde@{{version}}/dist/easymde.min.js"></script>
-{{else}}
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-    <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-{{/if}}
+<link rel="stylesheet" href="https://unpkg.com/easymde@{{version}}/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde@{{version}}/dist/easymde.min.js"></script>
+
+<script>
+    function toggleFontAwesomeParameter() {
+        const url = new URL(window.location.href);
+        const usingFA4 = Boolean({{#if useFA4}}1{{else}}0{{/if}});
+        if (usingFA4) {
+            url.searchParams.delete('fa4');
+        } else {
+            url.searchParams.set('fa4', 'true');
+        }
+        window.location.href = url;
+    }
+
+    function toggleNextVersion() {
+        debugger;
+        const url = new URL(window.location.href);
+        if (url.pathname.includes('next')) {
+            url.pathname = '/';
+        } else {
+            url.pathname = '/next';
+        }
+        window.location.href = url;
+    }
+</script>
 
 <div class="jumbotron">
     <div class="container">
@@ -17,20 +36,33 @@
             Features built-in autosaving and spell checking.</p>
         <p>A fork of <a href="https://github.com/sparksuite/simplemde-markdown-editor" target="_blank">SimpleMDE</a></p>
         <hr class="my-4">
-        <p class="lead">
-            <a class="btn btn-lg btn-dark button-github" href="https://github.com/Ionaru/easy-markdown-editor" target="_blank">
-                <i class="fab fa-github"></i> GitHub
-            </a>
-            <a class="btn btn-lg btn-danger button-npm" href="https://www.npmjs.com/package/easymde" target="_blank">
-                <i class="fas fa-box"></i> NPM
-            </a>
-        </p>
+        <div class="lead d-flex justify-content-between">
+            <div>
+                <p>Links</p>
+                <a class="btn btn-lg btn-dark button-github" href="https://github.com/Ionaru/easy-markdown-editor" target="_blank">
+                    <i class="{{#if useFA4}}fa{{else}}fab{{/if}} fa-github"></i> GitHub
+                </a>
+                <a class="btn btn-lg btn-danger button-npm" href="https://www.npmjs.com/package/easymde" target="_blank">
+                    <i class="{{#if useFA4}}fa fa-archive{{else}}fas fa-box{{/if}}"></i> NPM
+                </a>
+            </div>
+            <div>
+                <p class="text-right">Settings</p>
+                <button class="btn btn-lg" onclick="toggleFontAwesomeParameter()">
+                    <i class="{{#if useFA4}}fa{{else}}fab{{/if}} fa-font-awesome"></i> FontAwesome {{#if useFA4}}4{{else}}5{{/if}}
+                </button>
+                <button class="btn btn-lg" onclick="toggleNextVersion()">
+                    <i class="{{#if useFA4}}fa{{else}}fas{{/if}} fa-tag"></i> {{#if onReleaseVersion}}Latest{{else}}Next{{/if}}
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="container">
     <h2>The default editor</h2>
-    <textarea title="thing" id="mde-demo"></textarea>
+    <label for="mde-demo">The editor with standard settings.</label>
+    <textarea id="mde-demo"></textarea>
     <script>
         new EasyMDE({
             autoDownloadFontAwesome: false,
@@ -49,9 +81,8 @@
     <hr>
 
     <h2>Autosaving</h2>
-    <p>The editor can automatically save its contents, so changes are not lost when you reload the page.</p>
-
-    <textarea title="thing" id="mde-autosave-demo"></textarea>
+    <label for="mde-autosave-demo">The editor can automatically save its contents, so changes are not lost when you reload the page.</label>
+    <textarea id="mde-autosave-demo"></textarea>
     <script>
         new EasyMDE({
             autoDownloadFontAwesome: false,
@@ -80,9 +111,8 @@
     <hr>
 
     <h2>Toolbar customization</h2>
-    <p>The editor's toolbar can be editor to show more icons and even add custom icons!</p>
-
-    <textarea title="thing" id="mde-toolbar-demo"></textarea>
+    <label for="mde-toolbar-demo">The editor's toolbar can be edited to show more icons and even add custom icons!</label>
+    <textarea id="mde-toolbar-demo"></textarea>
     <script>
         new EasyMDE({
             autoDownloadFontAwesome: false,
