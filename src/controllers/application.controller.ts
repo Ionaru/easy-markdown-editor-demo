@@ -1,3 +1,4 @@
+import { WebServer } from '@ionaru/web-server';
 import * as bodyParser from 'body-parser';
 import * as compression from 'compression';
 import * as express from 'express';
@@ -13,7 +14,7 @@ import { ErrorRouter } from '../routes/error.router';
 import { GlobalRouter } from '../routes/global.router';
 import { HomeRouter } from '../routes/home.router';
 import { NotFoundRouter } from '../routes/not-found.router';
-import { WebServer } from './server.controller';
+import { config } from './configuration.controller';
 
 export class Application {
 
@@ -91,11 +92,14 @@ export class Application {
 
         logger.info('App startup done');
 
-        this.webServer = new WebServer(expressApplication);
+        const serverPort = config.getProperty('server_port', 1234) as number;
+        this.webServer = new WebServer(expressApplication, serverPort);
+        this.webServer.listen().then();
     }
 
     public async stop(error?: Error): Promise<void> {
         const exitCode = error ? 1 : 0;
+
         // Ensure the app exits when there is an exception during shutdown.
         process.on('uncaughtException', () => {
             Application.exit(exitCode);
@@ -113,12 +117,9 @@ export class Application {
         logger.warn(quitMessage);
 
         if (this.webServer) {
-            this.webServer.server.close(() => {
-                logger.info('HTTP server closed');
-                Application.exit(exitCode);
-            });
-        } else {
-            Application.exit(exitCode);
+            await this.webServer.close();
+            logger.info('HTTP server closed');
         }
+        Application.exit(exitCode);
     }
 }
