@@ -9,12 +9,12 @@ import * as sassMiddleware from 'node-sass-middleware';
 import * as path from 'path';
 import { logger } from 'winston-pnp-logger';
 
+import { config } from '../index';
 import { RequestLogger } from '../loggers/request.logger';
 import { ErrorRouter } from '../routes/error.router';
 import { GlobalRouter } from '../routes/global.router';
 import { HomeRouter } from '../routes/home.router';
 import { NotFoundRouter } from '../routes/not-found.router';
-import { config } from './configuration.controller';
 
 export class Application {
 
@@ -94,7 +94,9 @@ export class Application {
 
         const serverPort = config.getProperty('server_port', 1234) as number;
         this.webServer = new WebServer(expressApplication, serverPort);
-        this.webServer.listen().then();
+        await this.webServer.listen();
+
+        logger.info(`App listening on port ${serverPort}`);
     }
 
     public async stop(error?: Error): Promise<void> {

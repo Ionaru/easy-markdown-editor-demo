@@ -5,6 +5,8 @@ import { WinstonPnPLogger } from 'winston-pnp-logger';
 import { Application } from './controllers/application.controller';
 import { Configurator } from './controllers/configuration.controller';
 
+export let config: Configurator;
+
 (function start() {
     sourceMapSupport.install();
 
@@ -14,7 +16,7 @@ import { Configurator } from './controllers/configuration.controller';
         // logDir: 'logs',
     });
 
-    const config = new Configurator();
+    config = new Configurator();
     config.addConfigFile('config');
 
     const application = new Application();
