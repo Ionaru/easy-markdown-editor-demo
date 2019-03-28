@@ -92,8 +92,8 @@ export class Application {
 
         logger.info('App startup done');
 
-        const serverPort = config.getProperty('server_port', 1234) as number;
-        this.webServer = new WebServer(expressApplication, serverPort);
+        const serverPort = config.getProperty('server_port', '1234');
+        this.webServer = new WebServer(expressApplication, Number(serverPort));
         await this.webServer.listen();
 
         logger.info(`App listening on port ${serverPort}`);
