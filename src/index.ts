@@ -1,9 +1,9 @@
+import { Configurator } from '@ionaru/configurator';
 import 'reflect-metadata'; // Required by TypeORM.
 import * as sourceMapSupport from 'source-map-support';
 import { WinstonPnPLogger } from 'winston-pnp-logger';
 
 import { Application } from './controllers/application.controller';
-import { Configurator } from './controllers/configuration.controller';
 
 export let config: Configurator;
 
@@ -16,8 +16,8 @@ export let config: Configurator;
         // logDir: 'logs',
     });
 
-    config = new Configurator();
-    config.addConfigFile('config');
+    config = new Configurator('configuration');
+    config.addConfigFiles('config');
 
     const application = new Application();
 

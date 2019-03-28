@@ -13,6 +13,7 @@
     "author": "Jeroen Akkerman",
     "license": "MIT",
     "dependencies": {
+        "@ionaru/configurator": "^1.0.0",
         "@ionaru/web-server": "^1.0.1",
         "axios": "^0.18.0",
         "body-parser": "^1.18.3",
