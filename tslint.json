@@ -4,6 +4,12 @@
         "tslint:latest"
     ],
     "rules": {
+        "no-implicit-dependencies": [
+            true,
+            [
+                "express-serve-static-core"
+            ]
+        ],
         "max-line-length": [
             true,
             140
