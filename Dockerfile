@@ -2,6 +2,7 @@ FROM node:10-alpine
 RUN mkdir /app/
 WORKDIR /app/
 
+
 ## INSTALL SERVER
 
 # Copy needed build files
@@ -25,10 +26,13 @@ RUN mkdir /app/logs
 VOLUME /app/logs
 VOLUME /app/configuration
 
+# Install production packages.
+ENV NODE_ENV production
+RUN npm ci
+
 
 ## RUN
 
 EXPOSE  3099
 ENV LEVEL debug
-ENV NODE_ENV production
 CMD ["npm", "run", "start"]
