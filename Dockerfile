@@ -5,6 +5,11 @@ WORKDIR /app/
 
 ## INSTALL SERVER
 
+# Add volumes
+RUN mkdir /app/logs
+VOLUME /app/logs
+VOLUME /app/configuration
+
 # Copy needed build files
 COPY ./package.json .
 COPY ./package-lock.json .
@@ -20,11 +25,6 @@ RUN npm install
 
 # Build server for production
 RUN npm run build
-
-# Add volumes
-RUN mkdir /app/logs
-VOLUME /app/logs
-VOLUME /app/configuration
 
 # Install production packages.
 ENV NODE_ENV production
