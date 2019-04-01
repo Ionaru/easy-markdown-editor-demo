@@ -1,7 +1,7 @@
 import chalk, { Chalk, ColorSupport } from 'chalk';
+import Debug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import * as onFinished from 'on-finished';
-import { logger } from 'winston-pnp-logger';
 
 import { IResponse } from '../routes/base.router';
 
@@ -9,6 +9,7 @@ export class RequestLogger {
     public static ignoredUrls = ['/modules', '/images', '/fonts', '/stylesheets', '/scripts', '/favicon.ico'];
     public static ignoredExtension = ['.ico', '.js', '.css', '.png', '.jpg', '.svg', '.html'];
     public static arrow = chalk.white('->');
+    public static debug = Debug('request-logger');
 
     public static logRequest(): any {
         return function log(request: Request, response: Response, next: NextFunction) {
@@ -35,7 +36,7 @@ export class RequestLogger {
 
                     const ip = RequestLogger.getIp(request);
 
-                    const text = `${request.method} ${request.originalUrl}`;
+                    const text = chalk.white(`${request.method} ${request.originalUrl}`);
 
                     const requestDuration = Date.now() - requestStartTime;
                     const arrow = RequestLogger.arrow;
@@ -43,11 +44,11 @@ export class RequestLogger {
                     const logContent = `${ip}: ${text} ${arrow} ${router} ${arrow} ${status}, ${requestDuration}ms`;
 
                     if (endResponse.statusCode >= 500) {
-                        logger.error(logContent);
+                        process.emitWarning(logContent);
                     } else if (endResponse.statusCode >= 400) {
-                        logger.warn(logContent);
+                        process.emitWarning(logContent);
                     } else {
-                        logger.debug(logContent);
+                        RequestLogger.debug(logContent);
                     }
                 }
             });
