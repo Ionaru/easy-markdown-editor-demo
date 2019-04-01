@@ -27,7 +27,6 @@ export class Application {
 
     private sourceFolder = 'src';
     private assetsFolder = `${this.sourceFolder}/assets`;
-    private nodeModulesFolder = 'node_modules';
     private viewsFolder = `${this.sourceFolder}/views`;
     private stylesheetsFolder = `${this.assetsFolder}/stylesheets`;
     private stylesFolder = `${this.sourceFolder}/styles`;
@@ -69,13 +68,10 @@ export class Application {
         hbsUtils.registerWatchedPartials(path.join(this.viewsFolder, 'partials'));
         logger.info('View engine setup done');
 
-        // Static resources.
-        expressApplication.use(express.static(this.assetsFolder));
-        expressApplication.use('/modules', express.static(this.nodeModulesFolder));
-
         if (process.env.NODE_ENV !== 'production') {
-            // Serve sources when not in production mode.
+            // Serve sources and static resources when not in production mode.
             expressApplication.use(express.static(this.sourceFolder));
+            expressApplication.use(express.static(this.assetsFolder));
         }
 
         // Global router.
