@@ -3,17 +3,80 @@ import { Request, Response } from 'express';
 
 import { BaseRouter } from './base.router';
 
+interface INPMInfo {
+    _id: string;
+    _rev: string;
+    name: string;
+    'dist-tags': {
+        latest: string;
+        next: string;
+    };
+    versions: {
+        [key: string]: {
+            name: string;
+            version: string;
+            description: string;
+            keywords: string[];
+            main: string;
+            license: string;
+            author: {
+                name: string;
+            }
+            bugs: {
+                url: string;
+            }
+            dependencies: {
+                [key: string]: string;
+            }
+            devDependencies: {
+                [key: string]: string;
+            }
+            repository: {
+                type: string;
+                url: string;
+            }
+            gitHead: string;
+            homepage: string;
+            _id: string;
+            _npmVersion: string;
+            _nodeVersion: string;
+            _npmUser: {
+                name: string;
+                email: string
+            };
+            dist: {
+                integrity: string;
+                shasum: string;
+                tarball: string;
+                fileCount: number;
+                unpackedSize: number;
+                'npm-signature': string;
+            };
+            maintainers: Array<{
+                name: string;
+                email: string
+            }>
+            directories: {};
+            _npmOperationalInternal: {
+                host: string;
+                tmp: string
+            };
+            _hasShrinkwrap: boolean;
+        };
+    };
+}
+
 export class HomeRouter extends BaseRouter {
 
     private static cachedLatestVersion?: string;
     private static cachedAvailableVersions: string[] = [];
-    private static cachedNPMInfo?: any;
+    private static cachedNPMInfo?: INPMInfo;
 
     private static async getNPMInfo() {
         if (HomeRouter.cachedNPMInfo) {
             return HomeRouter.cachedNPMInfo;
         } else {
-            const npmInfo = await axios.get('https://registry.npmjs.org/easymde');
+            const npmInfo = await axios.get<INPMInfo>('https://registry.npmjs.org/easymde');
             HomeRouter.cachedNPMInfo = npmInfo.data;
 
             setTimeout(() => {
