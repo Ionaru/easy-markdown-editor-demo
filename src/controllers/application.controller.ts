@@ -7,19 +7,20 @@ import * as hbsutils from 'hbs-utils';
 import * as helmet from 'helmet';
 import * as sassMiddleware from 'node-sass-middleware';
 import * as path from 'path';
-import { logger } from 'winston-pnp-logger';
 
-import { config } from '../index';
 import { RequestLogger } from '../loggers/request.logger';
 import { ErrorRouter } from '../routes/error.router';
 import { GlobalRouter } from '../routes/global.router';
 import { HomeRouter } from '../routes/home.router';
 import { NotFoundRouter } from '../routes/not-found.router';
+import { debug } from '../index';
 
 export class Application {
 
+    private static debug = debug.extend('Application');
+
     private static exit(exitCode: number) {
-        logger.info('Shutting down');
+        Application.debug('Shutting down');
         process.exit(exitCode);
     }
 
@@ -32,10 +33,10 @@ export class Application {
     private stylesFolder = `${this.sourceFolder}/styles`;
 
     public async start() {
-        logger.info('Beginning Express startup');
+        Application.debug('Beginning Express startup');
 
         const expressApplication = express();
-        logger.info('Express application constructed');
+        Application.debug('Express application constructed');
 
         // Request logger
         expressApplication.use(RequestLogger.logRequest());
@@ -50,7 +51,7 @@ export class Application {
 
         expressApplication.use(compression());
 
-        logger.info('Express configuration set');
+        Application.debug('Express configuration set');
 
         expressApplication.use(sassMiddleware({
             debug: false,
@@ -59,19 +60,20 @@ export class Application {
             sourceMap: true,
             src: this.stylesFolder,
         }));
-        logger.info('Style engine setup done');
+        Application.debug('Style engine setup done');
 
         // Set up view engine.
         const hbsUtils = hbsutils(hbs);
         expressApplication.set('views', this.viewsFolder);
         expressApplication.set('view engine', 'hbs');
         hbsUtils.registerWatchedPartials(path.join(this.viewsFolder, 'partials'));
-        logger.info('View engine setup done');
+        Application.debug('View engine setup done');
+
+        expressApplication.use(express.static(this.assetsFolder));
 
         if (process.env.NODE_ENV !== 'production') {
-            // Serve sources and static resources when not in production mode.
+            // Serve sources when not in production mode.
             expressApplication.use(express.static(this.sourceFolder));
-            expressApplication.use(express.static(this.assetsFolder));
         }
 
         // Global router.
@@ -84,15 +86,15 @@ export class Application {
         expressApplication.use('*', (new NotFoundRouter()).router);
         expressApplication.use(ErrorRouter.errorRoute);
 
-        logger.info('Express configuration set');
+        Application.debug('Express configuration set');
 
-        logger.info('App startup done');
+        Application.debug('App startup done');
 
-        const serverPort = config.getProperty('server_port', '1234');
+        const serverPort = process.env.MDE_PORT || 3000;
         this.webServer = new WebServer(expressApplication, Number(serverPort));
         await this.webServer.listen();
 
-        logger.info(`App listening on port ${serverPort}`);
+        Application.debug(`App listening on port ${serverPort}`);
     }
 
     public async stop(error?: Error): Promise<void> {
@@ -103,20 +105,20 @@ export class Application {
             Application.exit(exitCode);
         });
         process.on('unhandledRejection', (reason, p): void => {
-            logger.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason);
+            process.stderr.write(`Unhandled Rejection at: \nPromise ${p} \nReason: ${reason}\n`);
             Application.exit(exitCode);
         });
 
         let quitMessage = 'Quitting';
         if (error) {
             quitMessage += ' because of an uncaught exception!';
-            logger.error('Reason: ', error);
+            process.stderr.write(`Reason: ${error}\n`);
         }
-        logger.warn(quitMessage);
+        process.emitWarning(quitMessage);
 
         if (this.webServer) {
             await this.webServer.close();
-            logger.info('HTTP server closed');
+            Application.debug('HTTP server closed');
         }
         Application.exit(exitCode);
     }

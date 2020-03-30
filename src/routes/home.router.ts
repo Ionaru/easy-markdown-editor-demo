@@ -52,10 +52,10 @@ interface INPMInfo {
                 unpackedSize: number;
                 'npm-signature': string;
             };
-            maintainers: Array<{
+            maintainers: {
                 name: string;
                 email: string
-            }>
+            }[]
             directories: {};
             _npmOperationalInternal: {
                 host: string;

@@ -1,0 +1,16 @@
+version: '3'
+services:
+
+    server:
+        build: .
+        environment:
+            - DEBUG
+            - MDE_PORT
+        ports:
+            - "${MDE_PORT:-3000}:${MDE_PORT:-3000}"
+        restart: unless-stopped
+        volumes:
+            - ${MDE_DATA_VOLUME:-data-volume}:/app/data
+
+volumes:
+    data-volume:
