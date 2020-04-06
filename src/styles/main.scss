@@ -11,10 +11,30 @@ html {
         }
 
         .title-grid {
-            display: grid;
-            grid-template-columns: repeat(2, auto);
+            display: flex;
+            flex-wrap: wrap;
+
+            :first-child {
+                @media (max-width: 991.98px) {
+                    text-align: center;
+                }
+            }
 
             :last-child {
+                @media (max-width: 991.98px) {
+                    text-align: center;
+                }
+                @media (min-width: 992px) {
+                    text-align: right;
+                }
+            }
+        }
+
+        .settings-title {
+            @media (max-width: 767.98px) {
+                margin-top: 1rem;
+            }
+            @media (min-width: 768px) {
                 text-align: right;
             }
         }
