@@ -27,15 +27,15 @@
 <div class="jumbotron">
     <div class="container">
         <div class="title-grid">
-            <h1 class="display-4">Easy MarkDown Editor</h1>
-            <h1 class="display-4">v{{version}}</h1>
+            <h1 class="display-4 flex-grow-1">Easy MarkDown Editor</h1>
+            <h1 class="display-4 flex-grow-1">v{{version}}</h1>
         </div>
 
         <p class="lead">A simple, beautiful, and embeddable JavaScript Markdown editor. Delightful editing for beginners and experts alike.
             Features built-in autosaving and spell checking.</p>
         <p>A fork of <a href="https://github.com/sparksuite/simplemde-markdown-editor" target="_blank">SimpleMDE</a></p>
         <hr class="my-4">
-        <div class="lead d-flex justify-content-between">
+        <div class="lead d-flex flex-wrap justify-content-between">
             <div>
                 <p>Links</p>
                 <a class="btn btn-lg btn-dark button-github" href="https://github.com/Ionaru/easy-markdown-editor" target="_blank">
@@ -46,7 +46,7 @@
                 </a>
             </div>
             <div>
-                <p class="text-right">Settings</p>
+                <p class="settings-title">Settings</p>
                 <button class="btn btn-lg" onclick="toggleFontAwesomeParameter()">
                     <i class="{{#if useFA4}}fa{{else}}fab{{/if}} fa-font-awesome"></i> FontAwesome {{#if useFA4}}4{{else}}5{{/if}}
                 </button>

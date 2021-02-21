@@ -1,30 +1,19 @@
-import { Configurator } from '@ionaru/configurator';
-import 'reflect-metadata'; // Required by TypeORM.
+import Debug from 'debug';
 import * as sourceMapSupport from 'source-map-support';
-import { WinstonPnPLogger } from 'winston-pnp-logger';
+
+export const debug = Debug('easymde-demo');
 
 import { Application } from './controllers/application.controller';
 
-export let config: Configurator;
-
-(function start() {
+function start() {
     sourceMapSupport.install();
-
-    const logger = new WinstonPnPLogger({
-        announceSelf: false,
-        showMilliSeconds: true,
-        // logDir: 'logs',
-    });
-
-    config = new Configurator('configuration');
-    config.addConfigFiles('config');
 
     const application = new Application();
 
     // Ensure application shuts down gracefully at all times.
     process.stdin.resume();
     process.on('uncaughtException', (error: Error) => {
-        logger.error('Uncaught Exception!', error);
+        process.stderr.write(`Uncaught Exception! \n${error}\n`);
         application.stop(error).then();
     });
     process.on('SIGINT', () => {
@@ -35,8 +24,13 @@ export let config: Configurator;
     });
     // Promises that fail should not cause the application to stop, instead we log the error.
     process.on('unhandledRejection', (reason, p): void => {
-        logger.error('Unhandled Rejection at: Promise ', p, ' reason: ', reason);
+        process.stderr.write(`Unhandled Rejection at: \nPromise ${p} \nReason: ${reason}\n`);
     });
 
     application.start().then().catch((error: Error) => application.stop(error));
-})();
+}
+
+// Prevent file from running when importing from it.
+if (require.main === module) {
+    start();
+}

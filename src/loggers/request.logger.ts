@@ -1,15 +1,15 @@
 import * as chalk from 'chalk';
-import Debug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import * as onFinished from 'on-finished';
 
 import { IResponse } from '../routes/base.router';
+import { debug } from '../index';
 
 export class RequestLogger {
     public static ignoredUrls = ['/modules', '/images', '/fonts', '/stylesheets', '/scripts', '/favicon.ico'];
     public static ignoredExtension = ['.ico', '.js', '.css', '.png', '.jpg', '.svg', '.html'];
     public static arrow = chalk.white('->');
-    public static debug = Debug('request-logger');
+    public static debug = debug.extend('RequestLogger');
 
     public static logRequest(): any {
         return function log(request: Request, response: Response, next: NextFunction) {
@@ -44,7 +44,7 @@ export class RequestLogger {
                     const logContent = `${ip}: ${text} ${arrow} ${router} ${arrow} ${status}, ${requestDuration}ms`;
 
                     if (endResponse.statusCode >= 500) {
-                        process.emitWarning(logContent);
+                        process.stderr.write(logContent + '\n');
                     } else if (endResponse.statusCode >= 400) {
                         process.emitWarning(logContent);
                     } else {
@@ -71,12 +71,14 @@ export class RequestLogger {
     }
 
     private static getIp(request: Request) {
-        let ip = request.ip ||
-            request.headers['x-forwarded-for'] ||
+
+        const ip = request.headers['x-forwarded-for'] ||
+            request.connection.remoteAddress ||
+            request.socket.remoteAddress ||
+            request.ip ||
             'Unknown IP';
-        if (typeof ip === 'string' && ip.substr(0, 7) === '::ffff:') {
-            ip = ip.substr(7);
-        }
-        return ip;
+
+        // make IPv6 readable.
+        return (typeof ip === 'string' && ip.substr(0, 7) === '::ffff:') ? ip.substr(7) : ip;
     }
 }

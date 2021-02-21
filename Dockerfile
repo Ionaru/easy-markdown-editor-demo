@@ -1,38 +1,27 @@
-FROM node:10-alpine
-RUN mkdir /app/
-WORKDIR /app/
+FROM node:12-alpine
 
 
 ## INSTALL SERVER
 
-# Add volumes
-RUN mkdir /app/logs
-VOLUME /app/logs
-VOLUME /app/configuration
+RUN mkdir -p /app /app/data
+WORKDIR /app
 
-# Copy needed build files
-COPY ./package.json .
-COPY ./package-lock.json .
-COPY ./tsconfig.json .
-COPY ./gulpfile.ts .
-COPY ./configuration configuration
+# Copy required files
+COPY ./package.json ./package-lock.json ./tsconfig.json ./
+COPY ./src ./src
 
-# Copy source files
-COPY ./src src
-
-# Install server dependencies
+# Install dependencies
 RUN npm install
 
-# Build server for production
+# Build for production
+ENV NODE_ENV production
 RUN npm run build
 
-# Install production packages.
-ENV NODE_ENV production
-RUN npm ci
+# Add volumes
+VOLUME /app/data
 
 
 ## RUN
 
-EXPOSE  3099
-ENV LEVEL debug
-CMD ["npm", "run", "start"]
+ARG DEBUG
+CMD ["npm", "start"]

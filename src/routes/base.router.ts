@@ -1,16 +1,20 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { PathParams, RequestHandler, RequestHandlerParams } from 'express-serve-static-core';
-import { logger } from 'winston-pnp-logger';
+
+import { debug } from '../index';
 
 export interface IResponse extends Response {
     route?: string[];
 }
 
 export class BaseRouter {
+
+    private static debug = debug.extend('BaseRouter');
+
     public router = Router();
 
     constructor() {
-        logger.info(`New router: ${this.constructor.name}`);
+        BaseRouter.debug(`New router: ${this.constructor.name}`);
     }
 
     // noinspection JSUnusedGlobalSymbols
