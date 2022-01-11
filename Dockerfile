@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:16-alpine
 
 
 ## INSTALL SERVER
@@ -6,14 +6,12 @@ FROM node:12-alpine
 RUN mkdir -p /app /app/data
 WORKDIR /app
 
-# Copy required files
-COPY ./package.json ./package-lock.json ./tsconfig.json ./
-COPY ./src ./src
-
 # Install dependencies
-RUN npm install
+COPY ./package.json ./package-lock.json ./tsconfig.json ./
+RUN npm ci
 
 # Build for production
+COPY ./src ./src
 ENV NODE_ENV production
 RUN npm run build
 
