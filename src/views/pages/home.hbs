@@ -66,7 +66,7 @@
     new EasyMDE({
         autoDownloadFontAwesome: false,
         element: document.getElementById('mde-demo'),
-        initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
+        initialValue: '# EasyMDE \nGo ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
     });
     </code></pre>
     <script>
@@ -87,7 +87,7 @@
             uniqueId: 'mde-autosave-demo'
         },
         element: document.getElementById('mde-autosave-demo'),
-        initialValue: '## Autosave \n This editor automatically saves its contents every second!'
+        initialValue: '## Autosave \nThis editor automatically saves its contents every second!'
     });
     </code></pre>
     <script>
@@ -104,7 +104,7 @@
         autoDownloadFontAwesome: false,
         showIcons: ['strikethrough', 'code', 'table', 'redo', 'heading', 'undo', 'heading-bigger', 'heading-smaller', 'heading-1', 'heading-2', 'heading-3', 'clean-block', 'horizontal-rule'],
         element: document.getElementById('mde-toolbar-demo'),
-        initialValue: '## Toolbar \n Here you can see all the buttons available for the toolbar.'
+        initialValue: '## Toolbar \nHere you can see all the buttons available for the toolbar.'
     });
     </code></pre>
     <script>
@@ -137,9 +137,26 @@
                 action: 'https://github.com/Ionaru/easy-markdown-editor',
                 className: "fa fab fa-github",
                 title: "A Custom Link",
+            }, '|', {
+                name: "Dropdown",
+                className: "fa fas fa-arrow-down",
+                title: "A dropdown menu",
+                children: [{
+                    name: 'Left',
+                    className: "fa fas fa-arrow-left",
+                    action: () => alert('Left'),
+                }, {
+                    name: 'Right',
+                    className: "fa fas fa-arrow-right",
+                    action: () => alert('Right'),
+                }, {
+                    name: 'Up',
+                    className: "fa fas fa-arrow-up",
+                    action: () => alert('Up'),
+                }]
             }],
             element: document.getElementById('mde-custom-toolbar-demo'),
-            initialValue: '## Custom Toolbar \n Custom functions, icons and buttons can be defined for the toolbar.'
+            initialValue: '## Custom Toolbar \nCustom functions, icons and buttons can be defined for the toolbar.'
         });
     </code></pre>
     <script>

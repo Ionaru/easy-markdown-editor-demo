@@ -5,7 +5,6 @@ import * as express from 'express';
 import * as hbs from 'hbs';
 import * as hbsutils from 'hbs-utils';
 import * as helmet from 'helmet';
-import * as sassMiddleware from 'node-sass-middleware';
 import * as path from 'path';
 
 import { RequestLogger } from '../loggers/request.logger';
@@ -14,6 +13,7 @@ import { GlobalRouter } from '../routes/global.router';
 import { HomeRouter } from '../routes/home.router';
 import { NotFoundRouter } from '../routes/not-found.router';
 import { debug } from '../index';
+import { createSassMiddleware } from '../middleware/sass.middleware';
 
 export class Application {
 
@@ -27,10 +27,9 @@ export class Application {
     private webServer?: WebServer;
 
     private sourceFolder = 'src';
-    private assetsFolder = `${this.sourceFolder}/assets`;
-    private viewsFolder = `${this.sourceFolder}/views`;
-    private stylesheetsFolder = `${this.assetsFolder}/stylesheets`;
-    private stylesFolder = `${this.sourceFolder}/styles`;
+    private assetsFolder = path.join(this.sourceFolder, 'assets');
+    private viewsFolder = path.join(this.sourceFolder, 'views');
+    private stylesFolder = path.join(this.sourceFolder, 'styles');
 
     public async start() {
         Application.debug('Beginning Express startup');
@@ -42,7 +41,9 @@ export class Application {
         expressApplication.use(RequestLogger.logRequest());
 
         // Security options
-        expressApplication.use(helmet());
+        expressApplication.use(helmet({
+            contentSecurityPolicy: false,
+        }));
         expressApplication.set('trust proxy', 1);
 
         // Setup bodyParser
@@ -53,9 +54,8 @@ export class Application {
 
         Application.debug('Express configuration set');
 
-        expressApplication.use(sassMiddleware({
+        expressApplication.use(createSassMiddleware({
             debug: false,
-            dest: this.stylesheetsFolder,
             prefix: '/stylesheets',
             sourceMap: true,
             src: this.stylesFolder,
